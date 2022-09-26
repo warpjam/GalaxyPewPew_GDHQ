@@ -312,6 +312,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4794279796541952974, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
+      propertyPath: laserPrefab
+      value: 
+      objectReference: {fileID: 5272331551182289644, guid: b40f5b68a1b98438ca544a841d1ff8f2, type: 3}
+    - target: {fileID: 4794279796541952974, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
+      propertyPath: _laserPrefab
+      value: 
+      objectReference: {fileID: 5272331551182289644, guid: b40f5b68a1b98438ca544a841d1ff8f2, type: 3}
     - target: {fileID: 6983490800399420362, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
       propertyPath: m_RootOrder
       value: 2
