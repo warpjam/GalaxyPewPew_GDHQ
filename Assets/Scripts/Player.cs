@@ -9,9 +9,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
         transform.position = new Vector3(0, 0, 0);
-
     }
     
     void Update()
@@ -27,16 +25,17 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         
         transform.Translate(direction * _speed * Time.deltaTime);
-        
 
-        if (transform.position.y >= 5.79f)
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 5.79f),0);
+
+        /*if (transform.position.y >= 5.79f)
         {
             transform.position = new Vector3(transform.position.x, 5.79f, 0);
         }
         else if (transform.position.y <= -3.8f)
         {
             transform.position = new Vector3(transform.position.x, -3.8f, 0);
-        }
+        }*/
 
         if (transform.position.x > 11f)
         {
