@@ -6,14 +6,8 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private float _enemySpeed = 4.0f;
 
-    void Start()
-    {
-        
-    }
-    
     void Update()
     {
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
