@@ -138,3 +138,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _powerupSpeed: 3
   _powerupID: 0
+  _powerUpSound: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}

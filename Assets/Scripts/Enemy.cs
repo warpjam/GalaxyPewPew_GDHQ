@@ -8,13 +8,57 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _enemySpeed = 4.0f;
     private Player _player;
+    private Animator _enemyExplosion;
+    private AudioSource _audioSource;
+    [SerializeField] private GameObject _laserPrefab;
+    private float _fireRate = 3.0f;
+    private float _canfire = -1f;
+    
+
+
+
 
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null)
+        {
+            Debug.Log("The player is NULL");
+        }
+
+        _enemyExplosion = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+        if (_enemyExplosion == null)
+        {
+            Debug.Log("The Animation is NULL");
+        }
+
+        if (_audioSource == null)
+        {
+            Debug.Log("The enemy AudioSource is NULL");
+        }
     }
 
     void Update()
+    {
+        EnemyMovement();
+
+        if (Time.time > _canfire)
+        {
+            _fireRate = Random.Range(3f, 7f);
+            _canfire = Time.time + _fireRate;
+            GameObject _enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+            Laser[] lasers = _enemyLaser.GetComponentsInChildren<Laser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+
+        }
+    }
+
+    private void EnemyMovement()
     {
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
 
@@ -35,7 +79,11 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-            Destroy(this.gameObject);
+            _enemyExplosion.SetTrigger("OnEnemyDeath");
+            _audioSource.Play();
+            _enemySpeed = 0.0f;
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.8f);
         }
         
         if (other.CompareTag("Laser"))
@@ -44,9 +92,16 @@ public class Enemy : MonoBehaviour
 
             if (_player != null)
             {
+                
                 _player.ScoreCalculator(10);
             }
-            Destroy(this.gameObject);
+            //trigger anim
+            _enemyExplosion.SetTrigger("OnEnemyDeath");
+            _audioSource.Play();
+            _enemySpeed = 0.0f;
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.8f);
         }
     }
+    
 }
