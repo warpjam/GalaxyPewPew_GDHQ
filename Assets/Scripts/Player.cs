@@ -223,4 +223,26 @@ public class Player : MonoBehaviour
         _score += points;
         _uiManager.UpdateScore(_score);
     }
+
+    public void AmmoPickup()
+    {
+        _ammoCount = 15;
+    }
+
+    public void HealthPickup()
+    {
+        if (_playerLives == 1)
+        {
+            _playerLives++;
+            _leftDamage.SetActive(false);
+            _uiManager.UpdateLives(_playerLives);
+        }
+        else if (_playerLives == 2)
+        {
+            _playerLives++;
+            _rightDamage.SetActive(false);
+            _uiManager.UpdateLives(_playerLives);
+        }
+        
+    }
 }
