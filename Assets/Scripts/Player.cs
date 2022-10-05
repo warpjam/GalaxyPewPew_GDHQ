@@ -4,24 +4,40 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed = 3.5f;
-    [SerializeField] private float _speedBoostMultiplier = 2;
+    [Header("Movement & Thrusters")]
+    [SerializeField] private float _speed = 5;
+    [SerializeField] private float _speedBoostMultiplier = 2.5f;
+    [SerializeField] private bool _speedBoostActive = false;
+    [SerializeField] private float _thrusterSpeed = 8;
+    [SerializeField] private GameObject _mainEnginePrefab;
+    [SerializeField] private GameObject _thrustersPrefab;
+
+
+    [Header("Weapons")] 
+    [SerializeField] private int _ammoCount = 15;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private float _fireRate = 0.5f;
-    [SerializeField] private int _playerLives = 3;
-    private float _canFire = -1f;
-    private SpawnManager _spawnManager;
     [SerializeField] private bool _tripleShotActive = false;
-    [SerializeField] private bool _speedBoostActive = false;
+    private float _canFire = -1f;
+    
+    [Header("Lives Shields & Damage")]
+    [SerializeField] private int _playerLives = 3;
     [SerializeField] private bool _shieldsActive = false;
+    [SerializeField] private int _shieldHits;
+    private SpriteRenderer _shieldHitColor;
     [SerializeField] private GameObject _playerShieldPrefab;
-    [SerializeField] private int _score;
-    private UIManager _uiManager;
     [SerializeField] private GameObject _leftDamage;
     [SerializeField] private GameObject _rightDamage;
+    
+
+    [Header("Misc")]
+    [SerializeField] private int _score;
+    private UIManager _uiManager;
+    private SpawnManager _spawnManager;
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _basicLaserSound;
+    [SerializeField] private AudioClip _emptyLaserSound;
 
 
 
@@ -57,9 +73,14 @@ public class Player : MonoBehaviour
         PlayerMovement();
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
-        {
-            Firelaser();
-        }
+            if (_ammoCount == 0 && _tripleShotActive == !true)
+            {
+                AudioSource.PlayClipAtPoint(_emptyLaserSound, transform.position);
+            }
+            else
+            {
+                Firelaser();
+            }
     }
 
     private void Firelaser()
@@ -72,7 +93,9 @@ public class Player : MonoBehaviour
         }
         else
         {
+            _ammoCount--;
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+            _uiManager.UpdateAmmoCount(_ammoCount);
         }
         _audioSource.Play();
 
@@ -82,11 +105,19 @@ public class Player : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        
-        transform.Translate(direction * _speed * Time.deltaTime);
 
+        if (Input.GetKey(KeyCode.RightShift) && _speedBoostActive != true)
+        {
+            transform.Translate(direction * _thrusterSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(direction * _speed * Time.deltaTime);
+        }
+            
+        
+        
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 5.79f),0);
 
         if (transform.position.x > 11f)
@@ -98,11 +129,30 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11, transform.position.y, 0);
         }
     }
+    
 
     public void Damage()
     {
         if (_shieldsActive == true)
         {
+            _shieldHits--;
+
+            switch (_shieldHits)
+            {
+                case 0:
+                    _shieldsActive = false;
+                    _playerShieldPrefab.SetActive(false);
+                    return;
+                case 1:
+                    _shieldHitColor.color = Color.red;
+                    return;
+                case 2:
+                    _shieldHitColor.color = Color.green;
+                    return;
+                default:
+                    break;
+            }
+            
             _shieldsActive = false;
             _playerShieldPrefab.SetActive(false);
             return;
@@ -160,6 +210,9 @@ public class Player : MonoBehaviour
 
     public void ShieldsUp()
     {
+        _shieldHitColor = _playerShieldPrefab.GetComponent<SpriteRenderer>();
+        _shieldHitColor.color = Color.cyan;
+        _shieldHits = 3;
         _shieldsActive = true;
         _playerShieldPrefab.SetActive(true);
         

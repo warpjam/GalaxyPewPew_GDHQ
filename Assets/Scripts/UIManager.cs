@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] private Image _livesImg;
+    [SerializeField] private TMP_Text _ammoText;
     [SerializeField] private Sprite[] _livesSprites;
     [SerializeField] private TMP_Text _gameOverTxt;
     [SerializeField] private TMP_Text _restartTxt;
@@ -59,6 +60,11 @@ public class UIManager : MonoBehaviour
             _gameOverTxt.text = " ";
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public void UpdateAmmoCount(int ammoCount)
+    {
+        _ammoText.text = "Ammo:" + ammoCount.ToString() + "/15";
     }
 
 }
