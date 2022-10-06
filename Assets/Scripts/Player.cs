@@ -87,21 +87,24 @@ public class Player : MonoBehaviour
     }
 
     private void Firelaser()
-    { 
-        _canFire = Time.time + _fireRate;
-
-        if (_tripleShotActive == true)
+    {
+        if (_uniBeamActive != true)
         {
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            _ammoCount--;
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
-            _uiManager.UpdateAmmoCount(_ammoCount);
-        }
-        _audioSource.Play();
+            _canFire = Time.time + _fireRate;
 
+            if (_tripleShotActive == true)
+            {
+                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            }
+            else
+            {
+                _ammoCount--;
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                _uiManager.UpdateAmmoCount(_ammoCount);
+            }
+
+            _audioSource.Play();
+        }
     }
 
     private void PlayerMovement()
