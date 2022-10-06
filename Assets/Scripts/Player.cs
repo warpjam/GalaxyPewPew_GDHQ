@@ -4,24 +4,31 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [Header("Movement & Thrusters")]
+    [Header("Movement")]
     [SerializeField] private float _speed = 5;
+    [SerializeField] private GameObject _mainEnginePrefab;
     [SerializeField] private float _speedBoostMultiplier = 2.5f;
     [SerializeField] private bool _speedBoostActive = false;
+
+    [Header("Thrusters")] 
     [SerializeField] private float _thrusterSpeed = 8;
-    [SerializeField] private GameObject _mainEnginePrefab;
     [SerializeField] private GameObject _thrustersPrefab;
-
-
-    [Header("Weapons")] 
+    
+    [Header("Weapons")]
     [SerializeField] private int _ammoCount = 15;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
-    [SerializeField] private float _fireRate = 0.5f;
+    [SerializeField] private GameObject _uniBeamPrefab;
     [SerializeField] private bool _tripleShotActive = false;
+    [SerializeField] private bool _uniBeamActive;
+    [SerializeField] private AudioClip _basicLaserSound;
+    [SerializeField] private AudioClip _emptyLaserSound;
+    [SerializeField] private AudioClip _uniBeamSound; 
+    [SerializeField] private float _fireRate = 0.5f;
     private float _canFire = -1f;
+
     
-    [Header("Lives Shields & Damage")]
+    [Header("Lives-Shields & Damage")]
     [SerializeField] private int _playerLives = 3;
     [SerializeField] private bool _shieldsActive = false;
     [SerializeField] private int _shieldHits;
@@ -32,15 +39,11 @@ public class Player : MonoBehaviour
     
 
     [Header("Misc")]
-    [SerializeField] private int _score;
+    private int _score;
     private UIManager _uiManager;
     private SpawnManager _spawnManager;
     private AudioSource _audioSource;
-    [SerializeField] private AudioClip _basicLaserSound;
-    [SerializeField] private AudioClip _emptyLaserSound;
-
-
-
+    
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -244,5 +247,22 @@ public class Player : MonoBehaviour
             _uiManager.UpdateLives(_playerLives);
         }
         
+        
+        
+    }
+
+    public void UniBeamPickup()
+    {
+        _uniBeamActive = true;
+        AudioSource.PlayClipAtPoint(_uniBeamSound, transform.position);
+        _uniBeamPrefab.SetActive(true);
+        StartCoroutine(UniBeamPowerDownRoutine());
+    }
+
+    IEnumerator UniBeamPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(6.0f);
+        _uniBeamPrefab.SetActive(false);
+        _uniBeamActive = false;
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
     [SerializeField] private float _powerupSpeed = 3;
-    [SerializeField] private int _powerupID; //ID for Powerups 0 = Tripleshot -> 1 = Speed -> 2 = Shields -> 3 == Ammo -> 4 == HealthPickup
+    [SerializeField] private int _powerupID; //ID for Powerups 0 = Tripleshot -> 1 = Speed -> 2 = Shields -> 3 == Ammo -> 4 == HealthPickup -> 5 == UniBeam
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _powerUpSound;
     void Update()
@@ -42,6 +42,9 @@ public class Powerup : MonoBehaviour
                         break;
                     case 4:
                         player.HealthPickup();
+                        break;
+                    case 5:
+                        player.UniBeamPickup();
                         break;
                     default:
                         Debug.Log("Default Value");

@@ -102,6 +102,19 @@ public class Enemy : MonoBehaviour
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }
+
+        if (other.CompareTag("UniBeam"))
+        {
+            if (_player != null)
+            {
+                _player.ScoreCalculator(10);
+            }
+            _enemyExplosion.SetTrigger("OnEnemyDeath");
+            _audioSource.Play();
+            _enemySpeed = 0.0f;
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.8f);
+        }
     }
     
 }

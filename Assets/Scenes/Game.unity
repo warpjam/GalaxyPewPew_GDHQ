@@ -955,6 +955,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113794119}
   m_CullTransparentMesh: 1
+--- !u!1 &1134857071 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1134857071, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
+  m_PrefabInstance: {fileID: 267905105370723557}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &1134857076
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134857071}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1170656696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1677,6 +1703,7 @@ MonoBehaviour:
   - {fileID: 6218379249684748523, guid: 578e26898046d40f8be87d6c313b0f08, type: 3}
   - {fileID: 1167331659674311701, guid: f26a7401f0a95454293f32c6d8474b16, type: 3}
   - {fileID: 322013996087078718, guid: 39e48c6bf5b55430b847e604a7ae7503, type: 3}
+  - {fileID: 5956279893443383574, guid: 04091286347c6494488a573c12168547, type: 3}
 --- !u!4 &1942888353
 Transform:
   m_ObjectHideFlags: 0
@@ -1700,10 +1727,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1452031451, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 937998141998598854, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1752,15 +1775,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6888636616616325682, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
-      propertyPath: _ammoCount
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6888636616616325682, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
-      propertyPath: _emptyLaserSound
-      value: 
-      objectReference: {fileID: 8300000, guid: d9510bedbcb9442ad890ffb65e130ac8, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6587482395482502674, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 74d88065e0ffd49b29bbd817d413fc23, type: 3}
 --- !u!1001 &8848668366904904335
 PrefabInstance:
