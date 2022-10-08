@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     [Header("Thrusters")] 
     [SerializeField] private float _thrusterSpeed = 8;
     [SerializeField] private GameObject _thrustersPrefab;
+    [SerializeField] private int _thrustPower = 100;
+    [SerializeField] private bool _canThrust = true;
     
     [Header("Weapons")]
     [SerializeField] private int _ammoCount = 15;
@@ -43,6 +45,7 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     private SpawnManager _spawnManager;
     private AudioSource _audioSource;
+    private CameraShake _cameraShake;
     
     void Start()
     {
@@ -50,6 +53,7 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
 
         if (_spawnManager == null)
         {
@@ -69,11 +73,17 @@ public class Player : MonoBehaviour
         {
             _audioSource.clip = _basicLaserSound;
         }
+
+        if (_cameraShake == null)
+        {
+            Debug.Log("The Camera Shake is NULL");
+        }
     }
     
     void Update()
     {
         PlayerMovement();
+        
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
             if (_ammoCount == 0 && _tripleShotActive == !true)
@@ -86,6 +96,16 @@ public class Player : MonoBehaviour
             }
     }
 
+    IEnumerator RechargeThrusters()
+    {
+        yield return new WaitForSeconds(5f);
+        while (_thrustPower < 100 && _canThrust == false)
+        {
+            _thrustPower = 100;
+            _uiManager.UpdateThrustSlider(_thrustPower);
+            _canThrust = true;
+        }
+    }
     private void Firelaser()
     {
         if (_uniBeamActive != true)
@@ -116,6 +136,13 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.RightShift) && _speedBoostActive != true)
         {
             transform.Translate(direction * _thrusterSpeed * Time.deltaTime);
+            _thrustPower--;
+            _uiManager.UpdateThrustSlider(_thrustPower);
+            if (_thrustPower == 0)
+            {
+                _canThrust = false;
+                StartCoroutine(RechargeThrusters());
+            }
         }
         else
         {
@@ -142,6 +169,7 @@ public class Player : MonoBehaviour
         if (_shieldsActive == true)
         {
             _shieldHits--;
+            _cameraShake.StartShaking();
 
             switch (_shieldHits)
             {
@@ -165,6 +193,7 @@ public class Player : MonoBehaviour
         }
         _playerLives -= 1;
         _uiManager.UpdateLives(_playerLives);
+        _cameraShake.StartShaking();
 
         if (_playerLives == 2)
         {
@@ -267,5 +296,10 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(6.0f);
         _uniBeamPrefab.SetActive(false);
         _uniBeamActive = false;
+    }
+
+    private void Thrusters()
+    {
+        
     }
 }

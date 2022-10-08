@@ -13,13 +13,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] _livesSprites;
     [SerializeField] private TMP_Text _gameOverTxt;
     [SerializeField] private TMP_Text _restartTxt;
+    [SerializeField] public Slider _thrustSlider;
     private GameManager _gameManager;
 
     void Start()
     {
         _scoreText.text = "Score: " + 0;
+        _ammoText.text = "Ammo: " + 15 + "/15";
         _gameOverTxt.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        
         if (_gameManager == null)
         {
             Debug.Log("Game Manager is NULL");
@@ -39,6 +42,11 @@ public class UIManager : MonoBehaviour
         {
             GameOverSequence();
         }
+    }
+
+    public void UpdateThrustSlider(float charge)
+    {
+        _thrustSlider.value = charge;
     }
 
     void GameOverSequence()
