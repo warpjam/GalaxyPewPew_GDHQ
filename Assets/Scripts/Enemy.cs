@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
     private float _canfire = -1f;
+    private bool _lasersActive;
     
 
 
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
             Debug.Log("The player is NULL");
         }
 
+        _lasersActive = true;
         _enemyExplosion = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
         if (_enemyExplosion == null)
@@ -43,7 +45,7 @@ public class Enemy : MonoBehaviour
     {
         EnemyMovement();
 
-        if (Time.time > _canfire)
+        if (Time.time > _canfire && _lasersActive == true) 
         {
             _fireRate = Random.Range(3f, 7f);
             _canfire = Time.time + _fireRate;
@@ -82,6 +84,7 @@ public class Enemy : MonoBehaviour
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _audioSource.Play();
             _enemySpeed = 0.0f;
+            _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }
@@ -99,6 +102,7 @@ public class Enemy : MonoBehaviour
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _audioSource.Play();
             _enemySpeed = 0.0f;
+            _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }
@@ -112,6 +116,7 @@ public class Enemy : MonoBehaviour
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _audioSource.Play();
             _enemySpeed = 0.0f;
+            _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }

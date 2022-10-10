@@ -262,6 +262,7 @@ public class Player : MonoBehaviour
     public void AmmoPickup()
     {
         _ammoCount = 15;
+        _uiManager.UpdateAmmoCount(_ammoCount);
     }
 
     public void HealthPickup()

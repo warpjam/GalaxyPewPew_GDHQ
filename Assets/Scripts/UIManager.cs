@@ -33,6 +33,11 @@ public class UIManager : MonoBehaviour
     {
         _scoreText.text = "Score: " + scoreCount.ToString();
     }
+    
+    public void UpdateAmmoCount(int ammoCount)
+    {
+        _ammoText.text = "Ammo:" + ammoCount.ToString() + "/15";
+    }
 
     public void UpdateLives(int currentLives)
     {
@@ -70,9 +75,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateAmmoCount(int ammoCount)
-    {
-        _ammoText.text = "Ammo:" + ammoCount.ToString() + "/15";
-    }
+
 
 }
