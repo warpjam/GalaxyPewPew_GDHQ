@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _enemySpeed = 4.0f;
+    private int _movementType; // 0 = straight, 1 = wave
     private Player _player;
     private Animator _enemyExplosion;
     private AudioSource _audioSource;
@@ -21,6 +22,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        _movementType = Random.Range(0, 2);
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
         {
@@ -62,7 +64,17 @@ public class Enemy : MonoBehaviour
 
     private void EnemyMovement()
     {
-        transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
+        switch (_movementType)
+        {
+            case 0:
+                transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
+                break;
+            case 1:
+                transform.Translate(new Vector3(Mathf.Cos(Time.time * 4) * 2, -1, 0) * _enemySpeed * Time.deltaTime);
+                break;
+            default:
+                return;
+        }
 
         if (transform.position.y < -5.3f)
         {
