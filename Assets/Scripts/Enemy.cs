@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canfire = -1f;
     private bool _lasersActive;
+    private SpawnManager _spawnManager;
     
 
 
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _movementType = Random.Range(0, 2);
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
@@ -98,6 +100,7 @@ public class Enemy : MonoBehaviour
             _enemySpeed = 0.0f;
             _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
+            _spawnManager._enemies.Remove(this.gameObject);
             Destroy(this.gameObject, 2.8f);
         }
         
@@ -116,6 +119,7 @@ public class Enemy : MonoBehaviour
             _enemySpeed = 0.0f;
             _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
+            _spawnManager._enemies.Remove(this.gameObject);
             Destroy(this.gameObject, 2.8f);
         }
 
@@ -130,6 +134,7 @@ public class Enemy : MonoBehaviour
             _enemySpeed = 0.0f;
             _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
+            _spawnManager._enemies.Remove(this.gameObject);
             Destroy(this.gameObject, 2.8f);
         }
     }

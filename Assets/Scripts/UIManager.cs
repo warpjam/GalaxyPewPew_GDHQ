@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] _livesSprites;
     [SerializeField] private TMP_Text _gameOverTxt;
     [SerializeField] private TMP_Text _restartTxt;
+    [SerializeField] private TMP_Text _waveCountText;
     [SerializeField] public Slider _thrustSlider;
     private GameManager _gameManager;
 
@@ -75,6 +76,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void NextWave(int wave)
+    {
+        _waveCountText.text = "Wave: " + wave;
+        StartCoroutine(WaveTextDisplay());
+    }
+
+    IEnumerator WaveTextDisplay()
+    {
+        _waveCountText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        _waveCountText.gameObject.SetActive(false);
+    }
 
 
 }
