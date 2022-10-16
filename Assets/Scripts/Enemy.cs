@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canfire = -1f;
     private bool _lasersActive;
+    private SpawnManager _spawnManager;
     
 
 
@@ -24,9 +25,15 @@ public class Enemy : MonoBehaviour
     {
         _movementType = Random.Range(0, 2);
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_player == null)
         {
             Debug.Log("The player is NULL");
+        }
+
+        if (_spawnManager == null)
+        {
+            Debug.Log("The Spawn Manager is NULL!");
         }
 
         _lasersActive = true;
@@ -98,7 +105,7 @@ public class Enemy : MonoBehaviour
             _enemySpeed = 0.0f;
             _lasersActive = false;
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.8f);
+            Destroy(this.gameObject, 2.0f);
         }
         
         if (other.CompareTag("Laser"))
@@ -107,7 +114,6 @@ public class Enemy : MonoBehaviour
 
             if (_player != null)
             {
-                
                 _player.ScoreCalculator(10);
             }
             //trigger anim
@@ -115,8 +121,9 @@ public class Enemy : MonoBehaviour
             _audioSource.Play();
             _enemySpeed = 0.0f;
             _lasersActive = false;
+            _spawnManager.EnemyKilled();
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.8f);
+            Destroy(this.gameObject, 2.0f);
         }
 
         if (other.CompareTag("UniBeam"))
@@ -129,8 +136,9 @@ public class Enemy : MonoBehaviour
             _audioSource.Play();
             _enemySpeed = 0.0f;
             _lasersActive = false;
+            _spawnManager.EnemyKilled();
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.8f);
+            Destroy(this.gameObject, 2.0f);
         }
     }
     

@@ -13,8 +13,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] _livesSprites;
     [SerializeField] private TMP_Text _gameOverTxt;
     [SerializeField] private TMP_Text _restartTxt;
+    [SerializeField] private TMP_Text _waveText;
     [SerializeField] public Slider _thrustSlider;
     private GameManager _gameManager;
+    private SpawnManager _spawnManager;
+
 
     void Start()
     {
@@ -22,10 +25,17 @@ public class UIManager : MonoBehaviour
         _ammoText.text = "Ammo: " + 15 + "/15";
         _gameOverTxt.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        
         
         if (_gameManager == null)
         {
             Debug.Log("Game Manager is NULL");
+        }
+
+        if (_spawnManager == null)
+        {
+            Debug.Log("The Spawn Manager is NULL!");
         }
     }
 
@@ -53,13 +63,13 @@ public class UIManager : MonoBehaviour
     {
         _thrustSlider.value = charge;
     }
+    
 
     void GameOverSequence()
     {
         _gameManager.GameOver();
         _gameOverTxt.gameObject.SetActive(true);
         _restartTxt.gameObject.SetActive(true);
-        
         
         StartCoroutine(GameOverFlickerRoutine());
     }
@@ -75,6 +85,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void DisplayWaveText(int waveNumber)
+    {
+        _waveText.text = "Wave " + waveNumber;
+        _waveText.gameObject.SetActive(true);
+        StartCoroutine(WaveTextRoutine());
+    }
 
-
+    IEnumerator WaveTextRoutine()
+    {
+        while (_waveText == true)
+        {
+            yield return new WaitForSeconds(3.0f);
+            _waveText.gameObject.SetActive(false);
+        }
+    }
+    
 }
