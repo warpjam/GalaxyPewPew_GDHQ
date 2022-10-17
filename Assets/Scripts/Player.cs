@@ -299,8 +299,9 @@ public class Player : MonoBehaviour
         _uniBeamActive = false;
     }
 
-    private void Thrusters()
+    public void JangoMinePickup()
     {
-        
+        Debug.Log("Jago Mine Whomp!");
+        Damage();
     }
 }
