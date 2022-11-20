@@ -301,7 +301,6 @@ public class Player : MonoBehaviour
 
     public void JangoMinePickup()
     {
-        Debug.Log("Jago Mine Whomp!");
         Damage();
     }
 }

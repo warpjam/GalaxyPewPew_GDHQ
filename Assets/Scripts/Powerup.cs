@@ -9,15 +9,9 @@ public class Powerup : MonoBehaviour
     [SerializeField] private int _powerupID; //ID for Powerups 0 = Tripleshot -> 1 = Speed -> 2 = Shields -> 3 == Ammo -> 4 == HealthPickup -> 5 == UniBeam => 6 == JangoMine
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _powerUpSound;
-    //private int _rotationSpeed = 60;
     void Update()
     {
         transform.Translate(Vector3.down * _powerupSpeed * Time.deltaTime);
-        // if (_powerupID == 6)
-        // {
-        //     transform.Rotate(new Vector3(0, 0, _rotationSpeed) * Time.deltaTime);
-        // }
-
         if (transform.position.y < -5.3f)
         {
             Destroy(this.gameObject);

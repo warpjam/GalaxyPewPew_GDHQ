@@ -6,16 +6,23 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private int _enemyID; //type0 = commonEnemy, type 1 = enemy2, type 2 = backfire enemy 
     [SerializeField] private float _enemySpeed = 4.0f;
-    private int _movementType; // 0 = straight, 1 = wave
+    private int _movementType; // 0 = straight, 1 = wave, 2 = rammer;
     private Player _player;
     private Animator _enemyExplosion;
     private AudioSource _audioSource;
     [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _missilePrefab;
+    [SerializeField] private GameObject _backShotLaserPrefab;
     private float _fireRate = 3.0f;
-    private float _canfire = -1f;
+    private float _canFire = -1f;
     private bool _lasersActive;
     private SpawnManager _spawnManager;
+    private bool _isShieldActive;
+    [SerializeField] private GameObject _shield;
+    private float _detectZone = 10f;
+    private int _ramSpeed = 3;
     
 
 
@@ -23,8 +30,13 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        if (Random.Range(0, 2) == 0)
+        {
+            _isShieldActive = true;
+            _shield.SetActive(true);
+        }
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        _movementType = Random.Range(0, 2);
+        _movementType = Random.Range(0, 3);
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
         {
@@ -48,11 +60,16 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         EnemyMovement();
+        EnemyFire();
+        
+    }
 
-        if (Time.time > _canfire && _lasersActive == true) 
+    public void EnemyFire()
+    {
+        if (Time.time > _canFire && _enemyID == 0 && _lasersActive == true)
         {
             _fireRate = Random.Range(3f, 7f);
-            _canfire = Time.time + _fireRate;
+            _canFire = Time.time + _fireRate;
             GameObject _enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
             Laser[] lasers = _enemyLaser.GetComponentsInChildren<Laser>();
 
@@ -60,8 +77,15 @@ public class Enemy : MonoBehaviour
             {
                 lasers[i].AssignEnemyLaser();
             }
-
         }
+
+        if (Time.time > _canFire && _enemyID == 1)
+        {
+            _fireRate = Random.Range(3f, 7f);
+            _canFire = Time.time + _fireRate;
+            Instantiate(_missilePrefab, transform.position, Quaternion.Euler(new Vector3(0,0,180)));
+        }
+
     }
 
     private void EnemyMovement()
@@ -72,7 +96,12 @@ public class Enemy : MonoBehaviour
                 transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
                 break;
             case 1:
-                transform.Translate(new Vector3(Mathf.Cos(Time.time * 4) * 2, -1, 0) * _enemySpeed * Time.deltaTime);
+                transform.Translate(new Vector3(Mathf.Cos(Time.time * 2) * 1, -1, 0) * Time.deltaTime);
+                break;
+            case 2:
+                if (Vector3.Distance(_player.transform.position, transform.position) < _detectZone)
+                    transform.position = Vector3.MoveTowards(transform.position, _player.transform.position,
+                        _ramSpeed * Time.deltaTime);
                 break;
             default:
                 return;
@@ -87,6 +116,13 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (_isShieldActive == true)
+        {
+            _isShieldActive = false;
+            _shield.SetActive(false);
+            //Destroy(other.gameObject);
+            return;
+        }
         if (other.CompareTag("Player"))
         {
             Player player = other.transform.GetComponent<Player>();
@@ -138,5 +174,44 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject, 2.8f);
         }
     }
-    
+
+    /*private void RearPlayerDetect()
+    {
+        //if player position y is greater than enemy && position X is equal to player x
+        if (_player.transform.position.y > this.transform.position.y &&
+            _player.transform.position.x == this.transform.position.x)
+        {
+            //instantiate backshotlaser
+            Instantiate(_backShotLaserPrefab);
+        }
+
+    }*/
+    IEnumerator BackShotFire()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Instantiate(_backShotLaserPrefab, transform.position, Quaternion.identity);
+        
+    }
+
+    private void FixedUpdate()
+    {
+        if (_enemyID == 2)
+        {
+            RaycastHit2D _hit = Physics2D.Raycast(transform.position, Vector2.up);
+
+            if (_hit.collider != null )
+            {
+                if (_hit.collider.tag == "Player")
+                {
+                    Debug.Log("Player is BEHIND YOU! FIRE");
+                    Debug.DrawRay(transform.position, Vector3.up * 5, Color.green);
+                    StartCoroutine(BackShotFire());
+                }
+                else
+                {
+                    Debug.DrawRay(transform.position, Vector3.up * 5, Color.red);
+                }
+            }
+        }
+    }
 }
