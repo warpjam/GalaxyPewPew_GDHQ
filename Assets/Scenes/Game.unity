@@ -2129,6 +2129,7 @@ MonoBehaviour:
   _enemiesToSpawn:
   - {fileID: 8472797848190673698, guid: 3c52ce68428c54fdcacc1a147d47fc8e, type: 3}
   - {fileID: 456146563782178542, guid: c7c4901b690354e54ac42122b95b1b44, type: 3}
+  - {fileID: 1409763048638772875, guid: 5ff2b8bde03bd4200bc13fe37bd51202, type: 3}
   _enemyContainer: {fileID: 1459448812}
   _powerups:
   - {fileID: 378938449454009406, guid: 7703b011d49f1455fa43c378bf62b32d, type: 3}

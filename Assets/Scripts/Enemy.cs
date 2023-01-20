@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     private bool _lasersActive;
     private SpawnManager _spawnManager;
     private bool _isShieldActive;
-    [SerializeField] private GameObject _shield;
+    [SerializeField] private GameObject _enemyShield;
     private float _detectZone = 10f;
     private int _ramSpeed = 3;
     
@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
         if (Random.Range(0, 2) == 0)
         {
             _isShieldActive = true;
-            _shield.SetActive(true);
+            _enemyShield.SetActive(true);
         }
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _movementType = Random.Range(0, 3);
@@ -61,7 +61,8 @@ public class Enemy : MonoBehaviour
     {
         EnemyMovement();
         EnemyFire();
-        
+        CheckPlayerBehindEnemy();
+
     }
 
     public void EnemyFire()
@@ -102,6 +103,8 @@ public class Enemy : MonoBehaviour
                 if (Vector3.Distance(_player.transform.position, transform.position) < _detectZone)
                     transform.position = Vector3.MoveTowards(transform.position, _player.transform.position,
                         _ramSpeed * Time.deltaTime);
+                else if(Vector3.Distance(_player.transform.position, transform.position) > _detectZone)
+                    transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
                 break;
             default:
                 return;
@@ -119,7 +122,7 @@ public class Enemy : MonoBehaviour
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
-            _shield.SetActive(false);
+            _enemyShield.SetActive(false);
             //Destroy(other.gameObject);
             return;
         }
@@ -175,43 +178,33 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /*private void RearPlayerDetect()
+    private void CheckPlayerBehindEnemy()
     {
-        //if player position y is greater than enemy && position X is equal to player x
-        if (_player.transform.position.y > this.transform.position.y &&
-            _player.transform.position.x == this.transform.position.x)
+        float playerX = _player.transform.position.x;
+        float enemyX = gameObject.transform.position.x;
+        float playerY = _player.transform.position.y;
+        float enemyY = gameObject.transform.position.y;
+        float xRange = 15f;
+        float yRange = 5f;
+
+        if (playerX < enemyX && playerX >= enemyX - xRange && playerY < 
+            enemyY + yRange && playerY > enemyY - yRange)
         {
-            //instantiate backshotlaser
-            Instantiate(_backShotLaserPrefab);
+            Debug.Log("Player is behind...Fire");
+            BackShotFire();
+            return;
+        } else {
+            return;
         }
 
-    }*/
+    }
+    
+    
     IEnumerator BackShotFire()
     {
         yield return new WaitForSeconds(1.0f);
         Instantiate(_backShotLaserPrefab, transform.position, Quaternion.identity);
-        
     }
 
-    private void FixedUpdate()
-    {
-        if (_enemyID == 2)
-        {
-            RaycastHit2D _hit = Physics2D.Raycast(transform.position, Vector2.up);
 
-            if (_hit.collider != null )
-            {
-                if (_hit.collider.tag == "Player")
-                {
-                    Debug.Log("Player is BEHIND YOU! FIRE");
-                    Debug.DrawRay(transform.position, Vector3.up * 5, Color.green);
-                    StartCoroutine(BackShotFire());
-                }
-                else
-                {
-                    Debug.DrawRay(transform.position, Vector3.up * 5, Color.red);
-                }
-            }
-        }
-    }
 }

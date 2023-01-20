@@ -138,8 +138,8 @@ MonoBehaviour:
   _enemySpeed: 3
   _laserPrefab: {fileID: 3364487398980842859, guid: a7460745ee8c8424dbf7d90fbad6433a, type: 3}
   _missilePrefab: {fileID: 5097560717902666571, guid: 133f963b6b966481da3df99a2f080e4a, type: 3}
-  _backShotLaserPrefab: {fileID: 0}
-  _shield: {fileID: 1116901834}
+  _backShotLaserPrefab: {fileID: 6650202492787032601, guid: ccc52c612ccf0417a8d8bc6a51d9ba7e, type: 3}
+  _enemyShield: {fileID: 1116901834}
 --- !u!212 &2842508668246627605
 SpriteRenderer:
   m_ObjectHideFlags: 0
